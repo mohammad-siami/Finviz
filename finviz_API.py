@@ -1,5 +1,6 @@
-from datetime import date
+
 import requests
+import json 
 
 url = 'https://finviz.com/api/quote.ashx?aftermarket=true&instrument=stock&patterns=true&premarket=true&rev=1660365755979&ticker=SOGU&timeframe=d&type=new'
 headers = {'authority': 'finviz.com',
@@ -15,12 +16,13 @@ headers = {'authority': 'finviz.com',
   'sec-fetch-site': 'same-origin',
   'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'
 }
-response = requests.get(url, headers=headers)
-json_response = response.json()  
-print(json_response)
-print(json_response['volume'])
-print(json_response['date'])
-  
+response = requests.get(url, headers=headers).json()
+#json_response = response.json()  
+print(response)
+print(response['volume'])
+print(response['date'])
+with open ('Finviz_json.json', 'w') as Finviz_js:
+  json.dump(response, Finviz_js)    
   
 
   
