@@ -1,6 +1,7 @@
 
 import requests
 import json 
+import pandas as pd
 
 url = 'https://finviz.com/api/quote.ashx?aftermarket=true&instrument=stock&patterns=true&premarket=true&rev=1660365755979&ticker=SOGU&timeframe=d&type=new'
 headers = {'authority': 'finviz.com',
@@ -18,14 +19,10 @@ headers = {'authority': 'finviz.com',
 }
 response = requests.get(url, headers=headers)
 response_js = response.json()  
-print(response_js)
-print(response_js['volume'])
-print(response_js['date'])
 with open ('Finviz_json.json', 'w') as Finviz_js:
   json.dump(response_js, Finviz_js)    
-  
 
-  
+ 
   
   
   
