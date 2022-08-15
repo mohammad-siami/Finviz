@@ -1,7 +1,9 @@
 
+from typing import Collection
 import requests
 import json 
-import pandas as pd
+import pymongo
+from pymongo import MongoClient, InsertOne
 
 url = 'https://finviz.com/api/quote.ashx?aftermarket=true&instrument=stock&patterns=true&premarket=true&rev=1660365755979&ticker=SOGU&timeframe=d&type=new'
 headers = {'authority': 'finviz.com',
@@ -17,12 +19,25 @@ headers = {'authority': 'finviz.com',
   'sec-fetch-site': 'same-origin',
   'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36'
 }
+
 response = requests.get(url, headers=headers)
-response_js = response.json()  
+response_js = response.json()  # Retrieve the respose in json format
+# Write the response json data into 'Finviz_json.json' file: 
 with open ('Finviz_json.json', 'w') as Finviz_js:
   json.dump(response_js, Finviz_js)    
+# Making connection to Mongo
+client = MongoClient('localhost', 27017)
+db = client.finviz
+collection = db.tickers
+requesting = []
 
- 
-  
+path = r'/media/python/New Volume/Automation/JadiJadi/Projects/Finviz_API/Finviz_json.json'
+with open(path) as f:
+  for jsonObj in f:
+        myDict = json.loads(jsonObj)
+        requesting.append(InsertOne(myDict))
+        
+result = collection.bulk_write(requesting)        
+client.close()  
   
   
